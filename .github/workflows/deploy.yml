@@ -1,3 +1,10 @@
+name: Deploy Plugin to FTP
+
+on:
+  push:
+    branches:
+      - main  # Se ejecutará en cada push a main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -6,13 +13,12 @@ jobs:
       - name: 🛎️ Descargar código del repo
         uses: actions/checkout@v4
 
-      - name: 📂 Subir archivos por FTP (prueba con valores directos)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: "178.16.128.32"  # Ponlo manualmente para probar
-          username: "u128332784.marcgranellhd2"
-          password: "210700Responde*"
-          local-dir: "./"
-          server-dir: "/public_html/wp-content/plugins/testgitplugin"
-          protocol: ftp
-          passive: true
+      - name: 📂 Instalar lftp y subir archivos
+        run: |
+          sudo apt-get update && sudo apt-get install -y lftp
+          lftp -u "u128332784.marcgranellhd2,210700Responde*" -e "
+          set ftp:ssl-allow yes;
+          set ftp:passive-mode yes;
+          mirror -R ./ /public_html/wp-content/plugins/testgitplugin;
+          bye;
+          " 178.16.128.32
