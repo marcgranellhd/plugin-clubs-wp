@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: 🚀 Subir plugin a FTP
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: 🛎️ Descargar el código del repo
