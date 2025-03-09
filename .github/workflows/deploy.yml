@@ -1,7 +1,15 @@
+name: Deploy Plugin to FTP
+
+on:
+  push:
+    branches:
+      - main  # Se ejecutará cuando hagas push en la rama principal
+
 jobs:
   deploy:
+    name: 🚀 Subir plugin a FTP
     runs-on: ubuntu-latest
-    envoirment: production
+    environment: production  # Asegúrate de que este ambiente existe en GitHub
 
     steps:
       - name: 🛎️ Descargar código del repo
@@ -9,14 +17,10 @@ jobs:
 
       - name: 📂 Subir archivos por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         with:
-          server: ${{ env.FTP_SERVER }}
-          username: ${{ env.FTP_USER }}
-          password: ${{ env.FTP_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: "./"
           server-dir: "/public_html/wp-content/plugins/testgitplugin/"
           protocol: ftp
