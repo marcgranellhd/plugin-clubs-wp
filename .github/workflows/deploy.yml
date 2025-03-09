@@ -1,4 +1,4 @@
-name: Deploy Plugin to FTP
+name: Deploy WordPress Plugin via FTPS
 
 on:
   push:
@@ -13,12 +13,14 @@ jobs:
       - name: 🛎️ Descargar código del repo
         uses: actions/checkout@v4
 
-      - name: 📂 Instalar lftp y subir archivos
+      - name: 📂 Instalar lftp y subir archivos por FTPS
         run: |
           sudo apt-get update && sudo apt-get install -y lftp
           lftp -u "u128332784.marcgranellhd2,210700Responde*" -e "
+          set ftp:ssl-force true;
           set ftp:ssl-allow yes;
+          set ssl:verify-certificate no;
           set ftp:passive-mode yes;
           mirror -R ./ /public_html/wp-content/plugins/testgitplugin;
           bye;
-          " 178.16.128.32
+          " ftps://178.16.128.32
